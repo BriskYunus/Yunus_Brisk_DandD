@@ -37,6 +37,9 @@
 
 	// handle dragover and drop
 	dropZones.forEach(zone => {
+
+		var dropCounter = 0;
+
 		zone.addEventListener("dragover", function(e) {
 			e.preventDefault();
 			console.log("you dragged over me!");
@@ -48,12 +51,30 @@
 
 			let piece = e.dataTransfer.getData("text/plain");
 			e.target.appendChild(document.querySelector(`#${piece}`));
+
+			dropCounter += 1;
+			console.log('Counter Drops = ' + dropCounter);
+
+			if (dropCounter > 1) {
+				piecesBoard.appendChild(document.querySelector(`#${piece}`));
+			}
 		});
-	})
+
+		puzzleSelectors.forEach(puzzle => puzzle.addEventListener("click", function(e) {
+			dropCounter = 0;
+		}));
+	});
+
+	function resetDropZone() {
+		dropZones.forEach(zone => {
+			zone.innerHTML = "";
+		});
+	}
 
 	function resetPuzzlePieces() {
 		// empty the thumbnail container
 		piecesBoard.innerHTML = "";
+		resetDropZone();
 		createPuzzlePieces(this.dataset.puzzleref);
 	}
 
